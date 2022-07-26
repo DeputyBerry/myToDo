@@ -88,15 +88,19 @@ window.addEventListener('load', () => {
             // if the edit button is clicked and the inner text is 'edit'
            if(taskElementEdit.innerText.toLowerCase() ==
             'edit') {
-                // remove the attribute of 'readonly'
-               taskElementInput.removeAttribute('readonly');
-                // sets focus on the input element
-               taskElementInput.focus();
-               taskElementEdit.innerText = 'Save';
-            } else {
-            console.log('save')
-
+                // allow for the input field to be editable
+                taskElementInput.removeAttribute('readonly');
+                // while text is editable, change the inner text to 'save'
+                taskElementEdit.innerText = 'Save';
+            } else if (taskElementEdit.innerText.toLowerCase() ==
+            'save') {
+                taskElementInput.setAttribute('readonly', 'readonly;');
+                // while text is not editable, change the inner text to 'edit'
+                taskElementEdit.innerText = 'Edit';
+                // save the new value of input field to local storage
+                localStorage.setItem(taskElementInput.value, taskElementInput.value);
             }
+
 
         })
 
@@ -105,6 +109,38 @@ window.addEventListener('load', () => {
         // if the delete button is clicked, remove the task from the list
             listElement.removeChild(taskElement);
         })
+
     })
+
+    // after a save button is clicked and input field is saved in local storage,
+    if(localStorage.length > 0) {
+        for(let i = 0; i < localStorage.length; i++) {
+            const task = localStorage.getItem(localStorage.key(i));
+            const taskElement = document.createElement('div');
+            taskElement.classList.add('task');
+            const taskElementContent = document.createElement('div');
+            taskElementContent.classList.add('task-content');
+            taskElement.appendChild(taskElementContent);
+            const taskElementInput = document.createElement('input');
+            taskElementInput.classList.add('text')
+            taskElementInput.type = 'text';
+            taskElementInput.value = task;
+            taskElementInput.setAttribute('readonly', 'readonly;');
+            taskElementContent.appendChild(taskElementInput);
+            const taskActionsElement = document.createElement('div');
+            taskActionsElement.classList.add('task-actions');
+            const taskElementEdit = document.createElement('button');
+            taskElementEdit.classList.add('edit');
+            taskElementEdit.innerHTML = 'Edit';
+            const taskElementDelete = document.createElement('button')
+            taskElementDelete.classList.add('delete');
+            taskElementDelete.innerHTML = 'Delete';
+            taskActionsElement.appendChild(taskElementEdit);
+            taskActionsElement.appendChild(taskElementDelete);
+            taskElement.appendChild(taskActionsElement);
+            listElement.appendChild(taskElement);
+        }
+    }
+    // the list is saved if the user clicks the save button
 })
 
