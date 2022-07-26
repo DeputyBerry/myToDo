@@ -104,12 +104,6 @@ window.addEventListener('load', () => {
 
         })
 
-        // adds an event listener to the delete button element
-        taskElementDelete.addEventListener('click', () => {
-        // if the delete button is clicked, remove the task from the list
-            listElement.removeChild(taskElement);
-        })
-
     })
 
     // after a save button is clicked and input field is saved in local storage,
@@ -141,6 +135,17 @@ window.addEventListener('load', () => {
             listElement.appendChild(taskElement);
         }
     }
-    // the list is saved if the user clicks the save button
+
+    // if the delete button is clicked, and input field is saved in local storage,
+    // remove the input field from local storage
+    // remove the li element from the task list
+    listElement.addEventListener('click', (e) => {
+        if(e.target.classList.contains('delete')) {
+            const task = e.target.parentElement.parentElement;
+            const taskInput = task.querySelector('input');
+            localStorage.removeItem(taskInput.value);
+            task.remove();
+        }
+    })
 })
 
